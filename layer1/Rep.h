@@ -69,6 +69,7 @@ enum cRep_t {
   cRepDihedral,        // 18
   cRepEllipsoid,       // 19
   cRepVolume,          // 20
+  cRepPy,               // 21
   // rep count
   cRepCnt
 };

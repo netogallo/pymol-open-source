@@ -37,6 +37,7 @@ Z* -------------------------------------------------------------------
 #include"RepCylBond.h"
 #include"RepDot.h"
 #include"RepMesh.h"
+#include"RepPy.h"
 #include"RepSphere.h"
 #include"RepSphereImmediate.h"
 #include"RepRibbon.h"
@@ -1275,6 +1276,7 @@ void CoordSet::update(int state)
   RepUpdateMacro(cRepNonbonded, RepNonbondedNew, state);
   RepUpdateMacro(cRepNonbondedSphere, RepNonbondedSphereNew, state);
   RepUpdateMacro(cRepEllipsoid, RepEllipsoidNew, state);
+  RepUpdateMacro(cRepPy, RepPyNew, state);
 
   for (int a = 0; a < cRepCnt; ++a) {
     if (!Rep[a])
@@ -1468,6 +1470,8 @@ void CoordSet::render(RenderInfo * info)
         r->render(info);
       }
       break;
+    case cRepPy:
+      r->render(info);
     }
   }
 }

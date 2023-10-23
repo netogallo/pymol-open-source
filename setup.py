@@ -9,6 +9,7 @@
 from distutils.core import setup, Extension
 from distutils.util import change_root
 from glob import glob
+import pybind11
 import shutil
 import sys, os, re
 
@@ -500,6 +501,8 @@ def get_packages(base, parent='', r=None):
 package_dir = dict((x, os.path.join(base, x))
         for base in ['modules']
         for x in get_packages(base))
+
+inc_dirs += [pybind11.get_include()]
 
 ext_modules += [
     Extension("pymol._cmd",

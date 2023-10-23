@@ -6544,6 +6544,8 @@ static PyMethodDef Cmd_methods[] = {
   {NULL, NULL}                  /* sentinel */
 };
 
+#include "Ext.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -6556,7 +6558,11 @@ PyObject * PyInit__cmd(void)
     "DO NOT USE",
     -1,
     Cmd_methods };
-  return PyModule_Create(&moduledef);
+
+  auto ext = PyInit_ext();
+  auto cmd = PyModule_Create(&moduledef);
+  PyModule_AddObject(cmd, "ext", ext);
+  return cmd;
 }
 
 // Required for AxPyMOL

@@ -7,6 +7,7 @@ class PyMolRepTrampoline : public PyMolRep {
     using PyMolRep::PyMolRep;
 
     public:
+    // void render(std::shared_ptr<PyRenderContext> ctx) override {
     void render(PyRenderContext* ctx) override {
         PYBIND11_OVERRIDE_PURE(
             void,

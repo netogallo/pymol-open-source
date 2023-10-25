@@ -4,7 +4,10 @@
 #include <Python.h>
 
 #include "Base.h"
+#include "CoordSet.h"
+#include "ObjectMolecule.h"
 #include "Rep.h"
+#include "vla.h"
 
 std::vector<PyMolRep*> py_reps_bad;
 void PyMolRep::register_bad(){
@@ -22,10 +25,35 @@ struct RepPy : Rep {
 
 RepPy::~RepPy() { }
 
+class PyRenderContextImplementation : public PyRenderContext {
+
+  public:
+  PyRenderContextImplementation(CoordSet* cs) : cs(cs) {
+
+  }
+
+  std::vector<std::vector<float>> current_scene_coords() override {
+    ObjectMolecule* obj = cs->Obj;
+    pymol::vla<AtomInfoType>& atomInfo = obj->AtomInfo;
+    std::vector<std::vector<float>> result;
+
+    for(int i = 0; i < atomInfo.size(); i++) {
+      float* coords = cs->coordPtr(cs->atmToIdx(i));
+      result.push_back({ coords[0], coords[1], coords[2] });
+    }
+
+    return result;
+  }
+
+  private:
+  CoordSet* cs;
+};
+
 void RepPy::render(RenderInfo* info) {
   //std::cout << "pyrep render" << std::endl;
   PyGILState_STATE gilState = PyGILState_Ensure();
-  PyRenderContext context;
+  //std::shared_ptr<PyRenderContextImplementation> context = std::make_shared<PyRenderContextImplementation>(cs);
+  PyRenderContextImplementation context(cs);
 
   for(auto rep : py_reps_bad) {
     rep->render(&context);

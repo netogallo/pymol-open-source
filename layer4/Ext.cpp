@@ -3,18 +3,17 @@
 
 namespace py = pybind11;
 
-class PyMolRep : public PyMolRepBase {
-    using PyMolRepBase::PyMolRepBase;
+class PyMolRepTrampoline : public PyMolRep {
+    using PyMolRep::PyMolRep;
 
     public:
     void render(PyRenderContext* ctx) override {
-        /*
-        PYBIND11_OVERRIDE(
+        PYBIND11_OVERRIDE_PURE(
             void,
-            PymolRepBase,
-            render
+            PyMolRep,
+            render,
+            ctx
         );
-        */
     }
 };
 
@@ -23,8 +22,8 @@ PYBIND11_MODULE(ext, m) {
         .def(py::init<>())
         .def("current_scene_coords", &PyRenderContext::current_scene_coords);
 
-    py::class_<PyMolRepBase, PyMolRep>(m, "PyMolRep")
+    py::class_<PyMolRep, PyMolRepTrampoline>(m, "PyMolRep")
         .def(py::init<>())
-        .def("render", &PyMolRepBase::render)
-        .def("register_bad", &PyMolRepBase::register_bad);
+        .def("render", &PyMolRep::render)
+        .def("register_bad", &PyMolRep::register_bad);
 }

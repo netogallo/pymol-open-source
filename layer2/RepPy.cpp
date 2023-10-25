@@ -6,8 +6,8 @@
 #include "Base.h"
 #include "Rep.h"
 
-std::vector<PyMolRepBase*> py_reps_bad;
-void PyMolRepBase::register_bad(){
+std::vector<PyMolRep*> py_reps_bad;
+void PyMolRep::register_bad(){
   py_reps_bad.push_back(this);
   printf("regis");
 }

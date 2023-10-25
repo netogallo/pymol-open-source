@@ -1,7 +1,7 @@
 #ifndef _H_RepPy
 #define _H_RepPy
 
-#include <pybind11/stl.h>
+#include <vector>
 
 struct PyMOLGlobals;
 struct Rep;
@@ -15,7 +15,7 @@ class PyRenderContext {
     }
 };
 
-class PyMolRepBase {
+class PyMolRep {
 
     public:
     virtual void render(PyRenderContext*) {}

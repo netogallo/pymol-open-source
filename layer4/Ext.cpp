@@ -9,12 +9,23 @@ class PyMolRepTrampoline : public PyMolRep {
     public:
     // void render(std::shared_ptr<PyRenderContext> ctx) override {
     void render(PyRenderContext* ctx) override {
-        PYBIND11_OVERRIDE_PURE(
-            void,
-            PyMolRep,
-            render,
-            ctx
-        );
+
+        try{
+            PYBIND11_OVERRIDE_PURE(
+                void,
+                PyMolRep,
+                render,
+                ctx
+            );
+        } catch(py::error_already_set &e) {
+            /*
+            Todo: decide what to do with the C++ exception. If we don't
+            catch it, pymol crashes.
+
+            Possibly also disable the renderer
+            */
+            // printf("python is angry");
+        }
     }
 };
 

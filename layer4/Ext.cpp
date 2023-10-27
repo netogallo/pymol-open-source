@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
-#include "RepPy.h"
+
+#include "PyRenderContext.h"
 
 namespace py = pybind11;
 
@@ -8,7 +9,7 @@ class PyMolRepTrampoline : public PyMolRep {
 
     public:
     // void render(std::shared_ptr<PyRenderContext> ctx) override {
-    void render(PyRenderContext* ctx) override {
+    void render(std::shared_ptr<PyRenderContextBase> ctx) override {
 
         try{
             PYBIND11_OVERRIDE_PURE(
@@ -30,8 +31,7 @@ class PyMolRepTrampoline : public PyMolRep {
 };
 
 PYBIND11_MODULE(ext, m) {
-    py::class_<PyRenderContext>(m, "PyRenderContext")
-        .def(py::init<>())
+    py::class_<PyRenderContext, std::shared_ptr<PyRenderContext>>(m, "PyRenderContext")
         .def("current_scene_coords", &PyRenderContext::current_scene_coords);
 
     py::class_<PyMolRep, PyMolRepTrampoline>(m, "PyMolRep")

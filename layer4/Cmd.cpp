@@ -80,6 +80,8 @@ Z* -------------------------------------------------------------------
 
 #include "MoleculeExporter.h"
 
+#include "RepPy.h"
+
 #define tmpSele "_tmp"
 #define tmpSele1 "_tmp1"
 #define tmpSele2 "_tmp2"
@@ -3226,6 +3228,32 @@ static PyObject *CmdVdwFit(PyObject * self, PyObject * args)
     APIExit(G);
   }
   return APIResultOk(ok);
+}
+
+bool asPymolRenderRep(PyObject* pyMolRep, std::shared_ptr<PyMolRep> &result);
+
+static PyObject *CmdPyRenderRep(PyObject * self, PyObject * args)
+{
+  PyMOLGlobals *G = NULL;
+  char *str1;
+  PyObject *pyRepPy;
+  std::shared_ptr<PyMolRep> pyRep;
+  int quiet;
+  API_SETUP_ARGS(G, self, args, "OsOi", &self, &str1, &pyRepPy, &quiet);
+  API_ASSERT(APIEnterBlockedNotModal(G));
+
+  ExecutivePyRenderRep(G, str1, pyRepPy);
+
+  if (!asPymolRenderRep(pyRepPy, pyRep)){
+    return nullptr;
+  }
+
+  //ExecutiveLabel(G, str1, str2, quiet, cExecutiveLabelEvalOn);
+  APIExitBlocked(G);
+  if (PyErr_Occurred()) {
+    return nullptr;
+  }
+  return APISuccess();
 }
 
 static PyObject *CmdLabel(PyObject * self, PyObject * args)
@@ -6503,6 +6531,7 @@ static PyMethodDef Cmd_methods[] = {
 //  {"set_matrix", CmdSetMatrix, METH_VARARGS},
   {"set_object_ttt", CmdSetObjectTTT, METH_VARARGS},
   {"set_object_color", CmdSetObjectColor, METH_VARARGS},
+  {"set_render_rep", CmdPyRep, METH_VARARGS},
   {"set_session", CmdSetSession, METH_VARARGS},
   {"set_state_order", CmdSetStateOrder, METH_VARARGS},
   {"set_symmetry", CmdSetSymmetry, METH_VARARGS},

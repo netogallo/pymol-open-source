@@ -9807,6 +9807,26 @@ pymol::Result<> ExecutiveMove(
   return {};
 }
 
+pymol::Result<> ExecutivePyRenderRep(PyMOLGlobals * G, const char *selection, PyObject *pyRep) {
+  int sele1;
+  ObjectMoleculeOpRec op1;
+
+  SelectorTmp s1(G, selection);
+  sele1 = s1.getIndex();
+
+  if(sele1 >= 0) {
+    ObjectMoleculeOpRecInit(&op1);
+    op1.code = OMOP_RepPy;
+    op.py_obj1 = pyRep;
+
+    if (!ExecutiveObjMolSeleOp(G, sele1, &op1)) {
+      return pymol::Error();
+    }
+  }
+
+  return {};
+}
+
 /*========================================================================*/
 pymol::Result<> ExecutiveLabel(PyMOLGlobals * G, const char *str1, const char *expr, int quiet, int eval_mode)
 {
@@ -16694,7 +16714,7 @@ pymol::Result<> ExecutiveLoadTraj(PyMOLGlobals* G, pymol::zstring_view oname,
   auto  s1 = SelectorTmp::make(G, str1.c_str());
   p_return_if_error(s1);
   bool ok = true;
-  auto origObj = ExecutiveFindObjectByName(G, oname.c_str());
+  auto origObj = ExecutiveFindObjectByName(G, oname.c_str());;
   if (!origObj) {
     return pymol::make_error("Must load object topology before loading trajectory.");
   }

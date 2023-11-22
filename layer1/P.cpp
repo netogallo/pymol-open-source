@@ -1884,6 +1884,7 @@ void PInit(PyMOLGlobals * G, int global_instance)
   P_pymol = PImportModuleOrFatal("pymol");
   P_pymol_dict = PyModule_GetDict(P_pymol);
   Py_XINCREF(P_pymol_dict);
+  
   if(!P_pymol_dict)
     ErrFatal(G, "PyMOL", "can't find globals for 'pymol'");
 

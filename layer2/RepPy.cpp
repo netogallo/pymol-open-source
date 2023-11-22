@@ -26,10 +26,14 @@ RepPy::~RepPy() { }
 
 void RepPy::render(RenderInfo* info) {
   PyGILState_STATE gilState = PyGILState_Ensure();
+  std::vector<std::weak_ptr<PyMolRep>> coords_reps = getRepsForCoords(cs);
   std::shared_ptr<PyRenderContextBase> context = new_render_context(cs);
 
-  for(auto rep : py_reps_bad) {
-    rep->render(context);
+  for(auto rep_ptr : coords_reps) {
+
+    if (auto rep = rep_ptr.lock()){
+      rep->render(context);
+    }
   }
 
   PyGILState_Release(gilState);

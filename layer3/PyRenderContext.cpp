@@ -10,6 +10,26 @@ PyRenderContext::PyRenderContext(CoordSet* cs) : cs(cs) { }
 
 PyRenderContext::~PyRenderContext() {}
 
+PyAtomInfo::PyAtomInfo(int pdbId) : vPdbId(pdbId) {}
+
+int PyAtomInfo::pdbId() {
+    return vPdbId;
+}
+
+std::vector<std::shared_ptr<PyAtomInfo>> PyRenderContext::atoms() {
+    ObjectMolecule* obj = cs->Obj;
+    pymol::vla<AtomInfoType>& atomInfos = obj->AtomInfo;
+    std::vector<std::shared_ptr<PyAtomInfo>> result;
+    result.reserve(atomInfos.size());
+    for(AtomInfoType* atomInfo = atomInfos.begin(); atomInfo != atomInfos.end(); atomInfo++){
+        result.push_back(
+            std::make_shared<PyAtomInfo>(atomInfo->id)
+        );
+    }
+
+    return result;
+}
+
 std::vector<std::vector<float>> PyRenderContext::current_scene_coords() {
     ObjectMolecule* obj = cs->Obj;
     pymol::vla<AtomInfoType>& atomInfo = obj->AtomInfo;

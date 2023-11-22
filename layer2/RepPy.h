@@ -2,6 +2,7 @@
 #define _H_RepPy
 
 #include <memory>
+#include <vector>
 
 struct PyMOLGlobals;
 struct Rep;
@@ -35,6 +36,8 @@ class PyMolRep {
     virtual void render(std::shared_ptr<PyRenderContextBase>) {}
     void register_bad();
 };
+
+std::vector<std::weak_ptr<PyMolRep>> getRepsForCoords(CoordSet* cset);
 
 Rep *RepPyNew(CoordSet * cset, int state);
 

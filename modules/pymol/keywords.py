@@ -246,6 +246,7 @@ def get_command_keywords(self_cmd=cmd):
         'set_symmetry'  : [ self_cmd.set_symmetry      , 0 , 0 , ''  , parsing.STRICT ],
         'set_title'     : [ self_cmd.set_title         , 0 , 0 , ''  , parsing.STRICT ],
         'set_key'       : [ self_cmd.set_key           , 0 , 0 , ''  , parsing.LITERAL1 ], # insecure
+        #'set_render_rep': [ self_cmd.set_render_rep    , 0 , 0 , ''  , parsing.STRICT ],
         'set_view'      : [ self_cmd.set_view          , 0 , 0 , ''  , parsing.STRICT ],
         'show'          : [ self_cmd.show              , 0 , 0 , ''  , parsing.STRICT ],
         'slice_new'     : [ self_cmd.slice_new         , 0 , 0 , ''  , parsing.STRICT ],

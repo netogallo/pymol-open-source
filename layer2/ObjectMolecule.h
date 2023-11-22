@@ -257,6 +257,7 @@ struct PDBInfoRec{
 #define OMOP_ReferenceSwap 65
 #define OMOP_RenameAtoms 66
 
+#define OMOP_RepPy 70
 
 typedef struct {
   ObjectMolecule *trg_obj, *mbl_obj;    /* target and mobile objects */

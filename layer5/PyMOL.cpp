@@ -19,6 +19,9 @@
 #include "os_gl.h"
 
 #include <clocale>
+#include <map>
+#include <memory>
+#include <vector>
 
 #include "MemoryDebug.h"
 
@@ -80,6 +83,8 @@
 
 #include "ShaderMgr.h"
 #include "Version.h"
+
+#include "RepPy.h"
 
 #ifndef _PYMOL_NOPY
 PyMOLGlobals *SingletonPyMOLGlobals = NULL;
@@ -153,6 +158,8 @@ typedef struct _CPyMOL {
 
   OVOneToOne *Setting;
 
+  std::map<CoordSet*, std::vector<std::weak_ptr<PyMolRep>>> py_reps;
+
 #ifdef _PYMOL_LIB
   OVOneToOne *MouseButtonCodeLexicon;
   ov_word lex_left, lex_middle, lex_right;
@@ -212,6 +219,33 @@ typedef struct _CPyMOL {
 
 } _CPyMOL;
 
+#ifndef _PYMOL_NOPY
+
+std::vector<std::weak_ptr<PyMolRep>> getRepsForCoords(CoordSet* cset) {
+
+  std::vector<std::weak_ptr<PyMolRep>> result;
+
+  return result;
+}
+
+bool addRepForCoords(CoordSet *cset, PyObject *pyRep) {
+
+  return true;
+}
+
+#else
+std::vector<std::weak_ptr<PyMolRep>> getRepsForCoords(CoordSet* cset) {
+
+  std::vector<std::weak_ptr<PyMolRep>> result;
+
+  return result;
+}
+
+bool addRepForCoords(CoordSet *cset, PyObject *pyRep) {
+
+  return true;
+}
+#endif
 
 /* convenience functions -- inline */
 

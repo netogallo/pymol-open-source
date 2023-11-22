@@ -9817,7 +9817,7 @@ pymol::Result<> ExecutivePyRenderRep(PyMOLGlobals * G, const char *selection, Py
   if(sele1 >= 0) {
     ObjectMoleculeOpRecInit(&op1);
     op1.code = OMOP_RepPy;
-    op.py_obj1 = pyRep;
+    op1.py_ob1 = pyRep;
 
     if (!ExecutiveObjMolSeleOp(G, sele1, &op1)) {
       return pymol::Error();

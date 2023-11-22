@@ -3230,8 +3230,6 @@ static PyObject *CmdVdwFit(PyObject * self, PyObject * args)
   return APIResultOk(ok);
 }
 
-bool asPymolRenderRep(PyObject* pyMolRep, std::shared_ptr<PyMolRep> &result);
-
 static PyObject *CmdPyRenderRep(PyObject * self, PyObject * args)
 {
   PyMOLGlobals *G = NULL;
@@ -3243,10 +3241,6 @@ static PyObject *CmdPyRenderRep(PyObject * self, PyObject * args)
   API_ASSERT(APIEnterBlockedNotModal(G));
 
   ExecutivePyRenderRep(G, str1, pyRepPy);
-
-  if (!asPymolRenderRep(pyRepPy, pyRep)){
-    return nullptr;
-  }
 
   //ExecutiveLabel(G, str1, str2, quiet, cExecutiveLabelEvalOn);
   APIExitBlocked(G);
@@ -6531,7 +6525,7 @@ static PyMethodDef Cmd_methods[] = {
 //  {"set_matrix", CmdSetMatrix, METH_VARARGS},
   {"set_object_ttt", CmdSetObjectTTT, METH_VARARGS},
   {"set_object_color", CmdSetObjectColor, METH_VARARGS},
-  {"set_render_rep", CmdPyRep, METH_VARARGS},
+  {"set_render_rep", CmdPyRenderRep, METH_VARARGS},
   {"set_session", CmdSetSession, METH_VARARGS},
   {"set_state_order", CmdSetStateOrder, METH_VARARGS},
   {"set_symmetry", CmdSetSymmetry, METH_VARARGS},

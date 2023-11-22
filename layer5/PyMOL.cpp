@@ -158,7 +158,7 @@ typedef struct _CPyMOL {
 
   OVOneToOne *Setting;
 
-  std::map<CoordSet*, std::vector<std::weak_ptr<PyMolRep>>> py_reps;
+  std::map<uintptr_t, std::vector<std::weak_ptr<PyMolRep>>> py_reps;
 
 #ifdef _PYMOL_LIB
   OVOneToOne *MouseButtonCodeLexicon;
@@ -220,15 +220,46 @@ typedef struct _CPyMOL {
 } _CPyMOL;
 
 #ifndef _PYMOL_NOPY
+#include <utility>
 
 std::vector<std::weak_ptr<PyMolRep>> getRepsForCoords(CoordSet* cset) {
 
-  std::vector<std::weak_ptr<PyMolRep>> result;
+  _CPyMOL *pymol = cset->G->PyMOL;
+  auto &py_reps = pymol->py_reps;
+  uintptr_t key = reinterpret_cast<uintptr_t>(cset);
 
-  return result;
+  auto repList = py_reps.find(key);
+
+
+  if (repList == py_reps.end()) {
+    return {};
+  }
+
+  return repList->second;
 }
 
-bool addRepForCoords(CoordSet *cset, PyObject *pyRep) {
+bool asPymolRenderRep(PyObject* pyMolRep, std::shared_ptr<PyMolRep> &result);
+
+bool addRepForCoords(_CPyMOL *pymol, CoordSet *cset, PyObject *pyRep) {
+
+  std::shared_ptr<PyMolRep> pyMolRep;
+  if(!asPymolRenderRep(pyRep, pyMolRep)) {
+    return false;
+  }
+
+  pymol->py_reps = std::map<uintptr_t, std::vector<std::weak_ptr<PyMolRep>>>();
+  auto &py_reps = pymol->py_reps;
+  // std::map<uintptr_t, std::vector<std::weak_ptr<PyMolRep>>> py_reps;
+  uintptr_t key = reinterpret_cast<uintptr_t>(cset);
+  auto repList = py_reps.find(key);
+  std::weak_ptr<PyMolRep> wkPymolRep = pyMolRep;
+
+  if (repList == py_reps.end()){
+    py_reps.insert({key, { wkPymolRep }});
+    //py_reps.insert({key, { }});
+  } else {
+    repList->second.push_back(wkPymolRep);
+  }
 
   return true;
 }
@@ -241,7 +272,7 @@ std::vector<std::weak_ptr<PyMolRep>> getRepsForCoords(CoordSet* cset) {
   return result;
 }
 
-bool addRepForCoords(CoordSet *cset, PyObject *pyRep) {
+bool addRepForCoords(_CPyMOL* pyMolRep, CoordSet *cset, PyObject *pyRep) {
 
   return true;
 }

@@ -8942,13 +8942,13 @@ void ObjectMoleculeTransformTTTf(ObjectMolecule * I, float *ttt, int frame)
   }
 }
 
-bool addRepForCoords(CoordSet *cset, PyObject *pyRep);
+bool addRepForCoords(CPyMOL *pymol, CoordSet *cset, PyObject *pyRep);
 
 bool ObjectMoleculeRepSeleOp(ObjectMolecule *I, CoordSet *cs, PyObject *pyRep) {
   PyMOLGlobals *G = I->G;
   CPyMOL *PyMOL = G->PyMOL;
 
-  return addRepForCoords(cs, pyRep);
+  return addRepForCoords(PyMOL, cs, pyRep);
 }
 
 /*========================================================================*/
@@ -9822,6 +9822,7 @@ bool ObjectMoleculeSeleOp(ObjectMolecule * I, int sele, ObjectMoleculeOpRec * op
           case OMOP_TTTF:
           case OMOP_ALTR:
           case OMOP_LABL:
+          case OMOP_RepPy:
           case OMOP_AlterState:
             s = ai->selEntry;
             if(SelectorIsMember(G, s, sele)) {
@@ -9869,8 +9870,9 @@ bool ObjectMoleculeSeleOp(ObjectMolecule * I, int sele, ObjectMoleculeOpRec * op
                 break;
               case OMOP_RepPy:
                 if(ok) {
-                  ObjectMoleculeRepSeleOp(G, cs, op->py_ob1);
+                  ObjectMoleculeRepSeleOp(I, cs, op->py_ob1);
                 }
+                break;
               case OMOP_LABL:
                 if(ok) {
                   if(!op->s1[0]) {

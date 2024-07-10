@@ -36,6 +36,11 @@ class QtNotAvailableError(Exception):
 # plugins from PYMOL_DATA
 
 startup.__path__.append(cmd.exp_path('$PYMOL_DATA/startup'))
+
+for directory in str.split(os.environ.get("PYMOL_STARTUP_PATH_POLY", ""), os.pathsep):
+    if os.path.exists(directory):
+        startup.__path__.append(directory)
+
 N_NON_USER_PATHS = len(startup.__path__)
 
 # API functions
